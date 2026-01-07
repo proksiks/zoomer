@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/proksiks/zoomer.git"
+    "url": "git+https://github.com/proksiks/image-pan-zoom.git"
   },
   "keywords": [
     "zoom",
@@ -39,9 +39,9 @@
   "author": "Khliupnev Vladimir",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/proksiks/zoomer/issues"
+    "url": "https://github.com/proksiks/image-pan-zoom/issues"
   },
-  "homepage": "https://github.com/proksiks/zoomer#readme",
+  "homepage": "https://github.com/proksiks/image-pan-zoom#readme",
   "devDependencies": {
     "@types/node": "^25.0.3",
     "terser": "^5.44.1",
