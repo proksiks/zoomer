@@ -2,6 +2,8 @@
 
 ImagePanZoom - это легковесная библиотека для реализации функциональности панорамирования и масштабирования изображений в браузере. Библиотека предоставляет плавное управление с помощью мыши, клавиатуры и сенсорных устройств с поддержкой инерции и ограничений границ.
 
+[Демо](https://proksiks.github.io/image-pan-zoom/)
+
 ## Особенности
 
 - Плавное масштабирование с помощью колеса мыши
@@ -36,8 +38,10 @@ const panZoom = createImagePanZoom(container, content);
 ### HTML структура
 
 ```html
-<div id="container" style="width: 500px; height: 500px;">
-  <img id="content" src="image.jpg" alt="Zoomable image" style="max-width: none;">
+<div class="zoom-container" id="image-container">
+  <div class="content" id="image-content">
+    <img draggable="false" src="https://img.goodfon.ru/wallpaper/nbig/c/c9/enot-vzgliad-voda-pogruzhenie-morda.webp" alt="Zoomable image">
+  </div>
 </div>
 ```
 
