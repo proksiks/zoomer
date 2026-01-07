@@ -16,7 +16,7 @@ ImagePanZoom - это легковесная библиотека для реа�
 ## Установка
 
 ```bash
-npm install zoomer
+npm install image-pan-zoom
 ```
 
 ## Использование
@@ -24,7 +24,7 @@ npm install zoomer
 ### Базовое использование
 
 ```javascript
-import { createImagePanZoom } from 'zoomer';
+import { createImagePanZoom } from 'image-pan-zoom';
 
 // Создание экземпляра
 const container = document.getElementById('container');
@@ -153,7 +153,7 @@ interface Transform {
   </div>
 
   <script type="module">
-    import { createImagePanZoom } from 'zoomer';
+    import { createImagePanZoom } from 'image-pan-zoom';
 
     const container = document.getElementById('container');
     const content = document.getElementById('content');

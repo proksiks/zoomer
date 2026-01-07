@@ -1,5 +1,5 @@
 {
-  "name": "zoomer",
+  "name": "image-pan-zoom",
   "version": "0.1.0",
   "description": "A lightweight library for pan and zoom functionality",
   "main": "dist/image-pan-zoom.umd.js",
@@ -8,8 +8,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/image-pan-zoom.es.js",
-      "require": "./dist/image-pan-zoom.umd.js"
+      "import": "./dist/image-pan-zoom.js",
+      "require": "./dist/image-pan-zoom.umd.cjs"
     }
   },
   "files": [
@@ -17,6 +17,7 @@
     "README.md"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "vite build",
     "dev": "vite",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -37,7 +38,6 @@
   ],
   "author": "Khliupnev Vladimir",
   "license": "MIT",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/proksiks/zoomer/issues"
   },
