@@ -11,6 +11,7 @@ export interface ImagePanZoomOptions {
   boundsPadding?: number
   friction?: number
   maxSpeed?: number
+  transition?: boolean
 }
 
 export interface Transform {
@@ -65,6 +66,7 @@ export class ImagePanZoom {
       boundsPadding: options.boundsPadding ?? 0.1,
       friction: options.friction ?? 0.92,
       maxSpeed: options.maxSpeed ?? 300,
+      transition: options.transition ?? false,
     }
 
     this.scale = this.options.initialScale
@@ -82,13 +84,19 @@ export class ImagePanZoom {
     this.init()
   }
 
+/**
+ * Initializes the pan and zoom functionality.
+ * Sets touch-action and user-select CSS properties on the content element.
+ * If transition is enabled, sets the transition CSS property on the content element.
+ * Applies the initial transform to the content element.
+ * Attaches wheel, pointerdown, pointermove, and pointerup event listeners.
+ */
   private init(): void {
-    this.content.style.touchAction = 'none'
-    ;(this.content.style as any).userSelect = 'none'
-    ;(this.content.style as any).webkitUserSelect = 'none'
-    ;(this.content.style as any).MozUserSelect = 'none'
-    ;(this.content.style as any).msUserSelect = 'none'
-    ;(this.content.style as any)['-webkit-touch-callout'] = 'none'
+    this.content.style.touchAction = 'none';
+    this.content.style.userSelect = 'none';
+
+    if (this.options.transition) this.content.style.transition = 'transform 0.3s ease-out'
+
     this.applyTransform()
     this.attachEvents()
   }
@@ -101,6 +109,18 @@ export class ImagePanZoom {
     window.addEventListener('pointerup', this.boundPointerUp)
   }
 
+/**
+ * Returns an object containing the sizes of the container and content
+ * elements, as well as the padding required to fit the content within the
+ * container.
+ *
+ * @returns {Object}
+ * @returns {number} contW - The width of the container element.
+ * @returns {number} contH - The height of the container element.
+ * @returns {number} pad - The padding required to fit the content within the container.
+ * @returns {number} w - The width of the content element after applying the current scale.
+ * @returns {number} h - The height of the content element after applying the current scale.
+ */
   private getSizes() {
     const contRect = this.container.getBoundingClientRect()
     const contW = contRect.width
@@ -121,20 +141,14 @@ export class ImagePanZoom {
     const fitsHorizontally = w <= contW
     const fitsVertically = h <= contH
 
-    // Исправленная логика: гарантируем, что контент всегда виден
     let minX: number, maxX: number, minY: number, maxY: number
-
     if (fitsHorizontally) {
-      // Если контент меньше контейнера, центрируем его
       minX = maxX = 0
     } else {
-      // Контент больше контейнера - ограничиваем так, чтобы края были видны
       const halfContW = contW / 2
       const halfW = w / 2
       
-      // Максимально можем сдвинуть влево (показываем правый край)
       maxX = halfW - halfContW + pad
-      // Максимально можем сдвинуть вправо (показываем левый край)
       minX = -(halfW - halfContW) - pad
     }
 
@@ -339,9 +353,6 @@ export class ImagePanZoom {
     this.applyTransform()
   }
 
-  /**
-   * Reset transform to initial state
-   */
   public reset(): void {
     this.stopAnimation()
     this.scale = this.options.initialScale
@@ -351,25 +362,32 @@ export class ImagePanZoom {
     this.velocityX = 0
     this.velocityY = 0
     this.velocityScale = 0
-    this.applyTransform()
+    
+    if (this.options.transition) {
+      this.content.style.transition = 'transform 0.3s ease-out'
+      this.applyTransform()
+      setTimeout(() => {
+        this.content.style.transition = 'transform 0.3s ease-out'
+      }, 300)
+    } else {
+      this.applyTransform()
+    }
   }
 
-  /**
-   * Rotate content by specified degrees
-   */
   public rotate(deg: number): void {
     this.rotation = (this.rotation + deg) % 360
-    this.content.style.transition = 'transform 0.5s ease-out'
-    this.applyTransform()
+    if (this.options.transition) {
+      this.content.style.transition = 'transform 0.5s ease-out'
+      this.applyTransform()
 
-    setTimeout(() => {
-      this.content.style.transition = 'transform 0.3s ease-out'
-    }, 500)
+      setTimeout(() => {
+        this.content.style.transition = 'transform 0.3s ease-out'
+      }, 500)
+    } else {
+      this.applyTransform()
+    }
   }
 
-  /**
-   * Get current transform state
-   */
   public getTransform(): Transform {
     return {
       scale: this.scale,
@@ -379,9 +397,6 @@ export class ImagePanZoom {
     }
   }
 
-  /**
-   * Set transform state
-   */
   public setTransform(transform: Partial<Transform>): void {
     if (transform.scale !== undefined) {
       this.scale = this.clampScale(transform.scale)
@@ -395,12 +410,18 @@ export class ImagePanZoom {
     if (transform.rotation !== undefined) {
       this.rotation = transform.rotation
     }
-    this.applyTransform()
+    
+    if (this.options.transition) {
+      this.content.style.transition = 'transform 0.3s ease-out'
+      this.applyTransform()
+      setTimeout(() => {
+        this.content.style.transition = 'transform 0.3s ease-out'
+      }, 300)
+    } else {
+      this.applyTransform()
+    }
   }
 
-  /**
-   * Destroy instance and remove all event listeners
-   */
   public destroy(): void {
     this.stopAnimation()
     this.container.removeEventListener('wheel', this.boundWheel)
@@ -414,7 +435,7 @@ export class ImagePanZoom {
   }
 }
 
-// Factory function for easier usage
+
 export function createImagePanZoom(
   container: HTMLElement,
   content: HTMLElement,
